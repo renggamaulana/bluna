@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function OurProducts() {
     return (
-        <div className="min-h-screen bg-cyan-400 w-full p-20">
+        <div className="min-h-screen bg-gradient-to-b from-cyan-500 to-cyan-800 w-full py-20 px-40">
             <h1 className="text-4xl font-bold text-white">Our Infused Water</h1>
             <div className="grid grid-cols-3 gap-4 mt-5 text-white text-shadow-md">
                 <div className="flex flex-col gap-5">
