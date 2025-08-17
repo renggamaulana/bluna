@@ -36,6 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <link rel="icon" href="/icon.png" sizes="any"/>
+      <title>Bluna Infused Water</title>
       <body
         className={`${inter.variable} ${geistMono.variable} antialiased`}
       >
