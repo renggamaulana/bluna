@@ -16,10 +16,10 @@ export default function Combinations() {
           <h1 className="text-3xl md:text-4xl font-extrabold text-neutral-800">
             Hydration, naturally.
           </h1>
-          <p className="text-lg text-neutral-600 leading-relaxed">
+          <p className="text-lg text-neutral-600 leading-relaxed">{`
             Bluna is more than just water. It's a refreshing experience, infused
             with real fruit and herbs, designed to elevate your everyday
-            hydration.
+            hydration.`}
           </p>
           <button className="mt-4 bg-teal-500 text-white px-8 py-3 rounded-full font-semibold shadow-md hover:bg-teal-600 hover:scale-105 transition-all duration-300 w-fit">
             Buy Bluna
