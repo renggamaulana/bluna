@@ -85,7 +85,7 @@ export default function Navbar() {
       >
         <ul
           className={`flex flex-col items-center gap-6 py-6 text-lg font-medium transition-all duration-500 ${
-            isScrolled ? "text-neutral-700" : "text-white bg-teal-500/90 backdrop-blur-md"
+            isScrolled ? "text-neutral-700" : "text-white bg-neutral-200/20 backdrop-blur-md"
           }`}
         >
           {["About", "Blog", "Health Tips"].map((item, i) => (

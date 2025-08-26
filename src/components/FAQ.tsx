@@ -36,9 +36,14 @@ export default function FAQ() {
   return (
     <section className="relative max-w-3xl mx-auto px-6 py-20">
       {/* Heading */}
-      <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-12 bg-gradient-to-r from-teal-500 to-emerald-500 bg-clip-text text-white rounded-md p-5">
-        Frequently Asked Questions
-      </h2>
+      <div className="text-center mb-14">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-neutral-800">
+          Frequently Asked Questions
+        </h2>
+        <div className="mt-4 w-32 h-1 bg-gradient-to-r from-teal-400 to-emerald-500 rounded-full mx-auto"></div>
+      </div>
+
+
 
       {/* FAQ List */}
       <div className="space-y-6">
