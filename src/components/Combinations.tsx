@@ -15,7 +15,7 @@ export default function Combinations() {
 
     const ctx = gsap.context(() => {
       // Animate section headings
-      gsap.utils.toArray(".section-heading").forEach((el: any) => {
+      gsap.utils.toArray<HTMLElement>(".section-heading").forEach((el) => {
         gsap.fromTo(
           el,
           { y: 60, opacity: 0 },
@@ -33,7 +33,7 @@ export default function Combinations() {
       });
 
       // Animate cards
-      gsap.utils.toArray(".fade-card").forEach((el: any) => {
+      gsap.utils.toArray<HTMLElement>(".fade-card").forEach((el) => {
         gsap.fromTo(
           el,
           { y: 80, opacity: 0, scale: 0.95 },

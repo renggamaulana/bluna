@@ -35,7 +35,7 @@ export default function Testimonial() {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      gsap.utils.toArray(".testimonial-card").forEach((el: any, i) => {
+      gsap.utils.toArray<HTMLElement>(".testimonial-card").forEach((el, i) => {
         gsap.fromTo(
           el,
           { y: 80, opacity: 0 },
