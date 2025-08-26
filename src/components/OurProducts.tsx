@@ -1,6 +1,16 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import Image from "next/image";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function OurProducts() {
+  const cardsRef = useRef<HTMLDivElement[]>([]);
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+
   const products = [
     {
       img: "/assets/iw.jpg",
@@ -19,22 +29,67 @@ export default function OurProducts() {
     },
   ];
 
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    gsap.fromTo(
+      sectionRef.current.querySelectorAll(".section-heading"),
+      { y: 60, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%",
+        },
+      }
+    );
+
+    gsap.fromTo(
+      cardsRef.current,
+      { y: 80, opacity: 0, scale: 0.9 },
+      {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        duration: 1,
+        ease: "power3.out",
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+        },
+      }
+    );
+  }, []);
+
   return (
-    <section className="min-h-screen bg-white w-full py-20 px-6 md:px-16 lg:px-32">
+    <section
+      ref={sectionRef}
+      className="min-h-screen bg-gradient-to-b from-white to-teal-50 w-full py-24 px-6 md:px-16 lg:px-32"
+    >
       {/* Heading */}
-      <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-center text-neutral-800">
-        Our Infused Water
-      </h1>
-      <p className="text-center text-neutral-500 mt-3 text-lg max-w-2xl mx-auto">
-        Discover the freshness of natural ingredients crafted to keep you hydrated and energized.
-      </p>
+      <div className="text-center max-w-3xl mx-auto">
+        <h1 className="section-heading text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-neutral-800">
+          Our <span className="text-teal-500">Infused</span> Water
+        </h1>
+        <p className="section-heading mt-4 text-neutral-500 text-lg md:text-xl leading-relaxed">
+          Discover the freshness of natural ingredients crafted to keep you
+          hydrated and energized.
+        </p>
+      </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 mt-16">
         {products.map((product, index) => (
           <div
             key={index}
-            className="bg-white border border-neutral-200 rounded-2xl shadow-md hover:shadow-xl transition-all duration-500 overflow-hidden group flex flex-col"
+            ref={(el) => {
+              if (el) cardsRef.current[index] = el;
+            }}
+            className="relative bg-white rounded-3xl shadow-lg overflow-hidden group transform transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
           >
             {/* Image */}
             <div className="overflow-hidden">
@@ -43,18 +98,21 @@ export default function OurProducts() {
                 alt={product.title}
                 width={500}
                 height={500}
-                className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-72 object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out"
               />
             </div>
 
             {/* Content */}
-            <div className="p-6 flex flex-col gap-3 text-center">
-              <h3 className="text-2xl font-semibold text-neutral-700 group-hover:text-teal-600 transition-colors duration-300">
+            <div className="p-8 text-center flex flex-col gap-4">
+              <h3 className="text-2xl font-semibold text-neutral-800 group-hover:text-teal-600 transition-colors duration-300">
                 {product.title}
               </h3>
               <p className="text-neutral-500 text-base leading-relaxed">
                 {product.desc}
               </p>
+              <button className="mt-4 px-6 py-2 bg-teal-500 text-white font-medium rounded-full shadow-md hover:bg-teal-600 hover:shadow-lg transition-all duration-300">
+                Explore
+              </button>
             </div>
           </div>
         ))}

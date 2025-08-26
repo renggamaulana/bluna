@@ -1,6 +1,15 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import Image from "next/image";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Testimonial() {
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+
   const testimonials = [
     {
       img: "/assets/testimoni/testi1.jpeg",
@@ -22,19 +31,63 @@ export default function Testimonial() {
     },
   ];
 
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray(".testimonial-card").forEach((el: any, i) => {
+        gsap.fromTo(
+          el,
+          { y: 80, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: "power3.out",
+            delay: i * 0.2,
+            scrollTrigger: {
+              trigger: el,
+              start: "top 85%",
+            },
+          }
+        );
+      });
+
+      gsap.fromTo(
+        ".testimonial-heading",
+        { y: 60, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".testimonial-heading",
+            start: "top 90%",
+          },
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="min-h-screen bg-white w-full py-20 px-6 md:px-12 lg:px-24">
+    <section
+      ref={sectionRef}
+      className="min-h-screen bg-gradient-to-b from-white via-teal-50/40 to-white w-full py-20 px-6 md:px-12 lg:px-24"
+    >
       {/* Heading */}
-      <h1 className="text-3xl md:text-4xl font-extrabold text-center text-neutral-800 capitalize tracking-tight">
-        What They Say
+      <h1 className="testimonial-heading text-3xl md:text-5xl font-extrabold text-center text-neutral-800 tracking-tight">
+        What <span className="text-teal-600">They Say</span>
       </h1>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 mt-16">
         {testimonials.map((item, i) => (
           <div
             key={i}
-            className="flex flex-col bg-white border border-neutral-200 rounded-2xl shadow-md hover:shadow-xl transition-all duration-500 overflow-hidden group"
+            className="testimonial-card flex flex-col bg-white border border-neutral-200 rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden group"
           >
             {/* Image */}
             <div className="overflow-hidden">
@@ -43,7 +96,7 @@ export default function Testimonial() {
                 alt={item.name}
                 width={500}
                 height={500}
-                className="w-full h-[350px] object-cover transform group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-[360px] object-cover transform group-hover:scale-105 transition-transform duration-700"
               />
             </div>
 
@@ -52,7 +105,9 @@ export default function Testimonial() {
               <h3 className="text-base md:text-lg font-medium italic text-neutral-600 leading-relaxed group-hover:text-teal-600 transition-colors duration-300">
                 “{item.quote}”
               </h3>
-              <span className="text-neutral-500 font-semibold">{item.name}</span>
+              <span className="text-neutral-700 font-semibold tracking-wide group-hover:text-teal-500 transition-colors">
+                — {item.name}
+              </span>
             </article>
           </div>
         ))}

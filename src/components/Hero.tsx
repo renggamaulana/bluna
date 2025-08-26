@@ -1,77 +1,100 @@
-'use client';
+"use client";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function HeroSection() {
+  const titleRef = useRef(null);
+  const subtitleRef = useRef(null);
+  const btnRef = useRef(null);
+
+  useEffect(() => {
+    const tl = gsap.timeline();
+
+    tl.fromTo(
+      titleRef.current,
+      { y: 80, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1.2, ease: "power4.out" }
+    )
+      .fromTo(
+        subtitleRef.current,
+        { y: 40, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: "power3.out" },
+        "-=0.6"
+      )
+      .fromTo(
+        btnRef.current,
+        { y: 30, opacity: 0, scale: 0.95 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.7)" },
+        "-=0.4"
+      );
+
+    // Parallax effect on scroll
+    gsap.to(".hero-bg", {
+      scale: 1.1,
+      y: 50,
+      scrollTrigger: {
+        trigger: ".hero-section",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+    });
+  }, []);
+
   return (
-    <section className="relative w-full h-[85vh] md:h-screen flex items-center justify-center overflow-hidden">
+    <section className="hero-section relative w-full h-[85vh] md:h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <Image
         src="/assets/hero-4.jpg"
         alt="Bluna Infused Water"
         priority
         fill
-        className="object-cover brightness-90"
+        className="hero-bg object-cover brightness-95"
       />
 
-      {/* Overlay Gradient (softer look) */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
 
       {/* Content */}
       <div className="relative z-10 text-center px-6">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white drop-shadow-xl tracking-tight animate-slideDown">
-          Bluna Infused Water
+        <h1
+          ref={titleRef}
+          className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight drop-shadow-xl"
+        >
+          <span className="block">Bluna</span>
+          <span className="block text-teal-400">Infused Water</span>
         </h1>
-        <p className="mt-4 text-base md:text-xl lg:text-2xl text-white/90 font-light max-w-2xl mx-auto animate-fadeIn delay-200">
-          Naturally refreshing, anytime, anywhere.
+
+        <p
+          ref={subtitleRef}
+          className="mt-4 text-lg md:text-2xl text-white/90 font-light max-w-2xl mx-auto"
+        >
+          Refresh your day with natural flavors, <br /> anytime & anywhere.
         </p>
 
         {/* CTA Buttons */}
-        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+        <div
+          ref={btnRef}
+          className="mt-8 flex flex-col sm:flex-row gap-4 justify-center"
+        >
           <a
             href="#products"
-            className="px-8 py-3 bg-teal-500 text-white font-semibold rounded-full shadow-md hover:bg-teal-600 hover:scale-105 transition-all duration-300"
+            className="px-8 py-3 bg-teal-500 text-white font-semibold rounded-full shadow-lg hover:bg-teal-600 hover:scale-105 transition-all duration-300"
           >
             Shop Now
           </a>
           <a
             href="#about"
-            className="px-8 py-3 bg-white text-teal-600 font-semibold rounded-full shadow-md hover:bg-neutral-100 hover:scale-105 transition-all duration-300"
+            className="px-8 py-3 bg-white/90 text-teal-700 font-semibold rounded-full shadow-lg hover:bg-white hover:scale-105 transition-all duration-300"
           >
             Learn More
           </a>
         </div>
       </div>
-
-      {/* Animations */}
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-40px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 1.5s ease-out forwards;
-        }
-        .animate-slideDown {
-          animation: slideDown 1.2s ease-out forwards;
-        }
-        .delay-200 {
-          animation-delay: 0.2s;
-        }
-      `}</style>
     </section>
   );
 }
