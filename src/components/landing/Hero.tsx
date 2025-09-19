@@ -46,7 +46,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="hero-section relative w-full h-[85vh] md:h-screen flex items-center justify-center overflow-hidden">
+    <section className="hero-section relative w-full h-screen md:h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <Image
         src="/assets/hero-4.jpg"

@@ -80,7 +80,7 @@ export default function Navbar() {
       {/* Mobile Dropdown */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
-          isOpen ? "max-h-64" : "max-h-0"
+          isOpen ? "h-screen" : "max-h-0"
         }`}
       >
         <ul
