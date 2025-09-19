@@ -128,7 +128,7 @@ export default function SalesPage() {
                       >
                         Hapus
                       </button>
-                    </td>
+                    </td> 
                   </tr>
                 ))}
               </tbody>
