@@ -1,116 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export type Sale = {
-  id: number;
-  product: "Botol Kecil" | "Botol Besar" | string;
+  _id?: string;
+  product: string;
   price: number;
   quantity: number;
   total: number;
-  timestamp: string; // human readable
-  date: string; // YYYY-MM-DD
+  timestamp: string;
+  date: string;
 };
 
-// singleton memory store (simple)
-let _sales: Sale[] = [
-  // contoh data awal (opsional) - bisa dihapus
-  {
-    id: 1,
-    product: "Botol Kecil",
-    price: 10000,
-    quantity: 2,
-    total: 20000,
-    timestamp: "2025-09-01 10:00:00",
-    date: "2025-09-01",
-  },
-  {
-    id: 2,
-    product: "Botol Besar",
-    price: 15000,
-    quantity: 1,
-    total: 15000,
-    timestamp: "2025-09-02 11:30:00",
-    date: "2025-09-02",
-  },
-];
-let _counter = _sales.length + 1;
-
-/**
- * useSales hook
- * - Mengembalikan sales saat ini dan fungsi untuk ubah data.
- * - Karena menggunakan singleton _sales, data persist selama session SPA.
- * - Untuk produksi: ganti implementasi add/delete/update dengan fetch ke API.
- */
 export function useSales() {
-  const [sales, setSales] = useState<Sale[]>(_sales);
+  const [sales, setSales] = useState<Sale[]>([]);
 
-  const refresh = () => setSales([..._sales]);
+  // load dari DB saat awal
+  useEffect(() => {
+    fetch("/api/sales")
+      .then((res) => res.json())
+      .then((data) => setSales(data));
+  }, []);
 
-  const addSale = (product: string, price: number, quantity = 1, date?: string) => {
+  const addSale = async (product: string, price: number, quantity = 1, date?: string) => {
     const day = date || new Date().toISOString().slice(0, 10);
     const now = new Date();
 
     const newSale: Sale = {
-      id: _counter++,
       product,
       price,
       quantity,
       total: price * quantity,
-      timestamp: now.toISOString(), // ✅ simpan ISO string
+      timestamp: now.toISOString(),
       date: day,
     };
 
-    _sales = [..._sales, newSale];
-    refresh();
+    const res = await fetch("/api/sales", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newSale),
+    });
+
+    const saved = await res.json();
+    setSales((prev) => [...prev, saved]);
   };
 
-    const deleteSale = (id: number) => {
-      _sales = _sales.filter((s) => s.id !== id);
-      refresh();
-    };
-
-    const updateQuantity = (id: number, newQuantity: number) => {
-      _sales = _sales.map((s) =>
-        s.id === id
-          ? {
-              ...s,
-              quantity: Math.max(1, newQuantity),
-              total: s.price * Math.max(1, newQuantity),
-            }
-          : s
-      );
-      refresh();
-    };
-
-    const changeQuantityBy = (id: number, delta: number) => {
-      const found = _sales.find((s) => s.id === id);
-      if (!found) return;
-      updateQuantity(id, Math.max(1, found.quantity + delta));
-    };
-
-    const deleteMonth = (month: string) => {
-    _sales = _sales.filter((s) => !s.date.startsWith(month));
-    refresh();
+  const deleteSale = async (id: string) => {
+    await fetch(`/api/sales/${id}`, { method: "DELETE" });
+    setSales((prev) => prev.filter((s) => s._id !== id));
   };
 
-const deleteDay = (date: string) => {
-  _sales = _sales.filter((s) => s.date !== date);
-  refresh();
-};
-
-
-
-  // helper: get sales copy
-  const getAll = () => [..._sales];
-  return {
-    sales,
-    addSale,
-    deleteSale,
-    updateQuantity,
-    changeQuantityBy,
-    getAll,
-    deleteMonth,   // ✅ tambahan
-    deleteDay,     // ✅ tambahan
-  };
+  return { sales, addSale, deleteSale };
 }
